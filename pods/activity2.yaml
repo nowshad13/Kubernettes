@@ -1,0 +1,14 @@
+apiVersion: v1 
+kind: Pod
+metadata:
+  name: susidalpod
+  labels:
+    app: susidal
+    env: dev
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      args:
+        - sleep
+        - 5s
