@@ -1,0 +1,38 @@
+image : postgress:16
+env:
+- name: POSTGRES_USER
+  value: Aravindh 
+  name: POSTGRES_PASSWORD
+  value: Aravindh@123
+  name: POSTGRESS_DB
+  value: aravindh
+
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-postgres-pod
+  labels:
+    app: nop-db
+    env: dev
+    engine: postgress
+spec:
+  containers:
+    - name: nop-db
+      image: postgres:16
+      env:
+        - name: POSTGRES_USER
+          value: Aravindh
+        - name: POSTGRESS_PASSWORD
+          value: Aravindh@123
+        - name: POSTGRESS_DB
+          value: aravindh
+      resources:
+        limits:
+          memory: "512Mi"
+          cpu: "1000m"
+      ports:
+        - containerPort: 5432
+
+      
