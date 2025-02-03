@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: spc-rs
+  labels:
+    app: spc
+    env: dev
+spec:
+  minReadySeconds: 2
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spc
+  template:
+    metadata:
+      name: spc
+      labels:
+        app: spc
+        env: dev
+    spec:
+      containers:
+        - name: spc
+          image: springcommunity/spring-framework-petclinic:6.1.2
+          ports:
+            - containerPort: 8080
+      resources:
+        limits:
+          cpu: "1000m"
+          memory: "128Mi"
