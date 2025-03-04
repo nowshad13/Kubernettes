@@ -419,3 +419,198 @@ spec:
 * `kubectl exec activity1 -c sidecar -it --/bin/sh` -> for alpine
 * `kubectl exec activity1 -c maincar -- /bin/sh` -> for bash
 
+## Microservices & Its Architechtures
+
+we have two models
+  * Monolith
+  * Microservices
+* Monolith :
+    * Monolith means All of the code is running one server
+    like nop commerse as it has only two components one is nop commerse and Database 
+
+* Microservices:
+   * Application will be divided into different services and run them in different infrastructures.
+   * Each service will be independent and will be able to communicate with each other using API.
+
+![alt text](image-3.png)
+
+Use:
+ * when ever there is a high traffic for application in case of monolith we need to scale hole server which is more cost
+ incase of Microservices we can scale the component which is using more by users component wise
+
+ Say like we have Ecommerse Application which is divided into different service componets like 
+ 1.Identity Service
+ 2. Order Service
+ 3. Bucket Service
+ 4. Payment Service
+
+ any one of the service is in high traffice, we can scale that componet without scaling hole application.
+ 
+There are two types of scaling 
+  * Manual
+  * automatic
+* whenever we get a new release it is not necessarily all microservices,irrespective of feautures or services impacted, we should perform zero downtime deployment
+
+* Generally scaling the pods indirectly demanads more infra
+
+Whats Kubernetes can do ?
+* Replicasets can scale pods
+* Automatic scaling of
+  * pods can be done using horizantal pod autoscaler
+  * nodes in manged kubernetes(aks,eks,gke) is possible via node auto scalers.
+
+which save bills more ? autoscaling or manual replications
+* if the company tried adding resources for limiting the cpu and memory this will be save bill on autoscaling
+
+* Managed Kubernetes or K8s as Services
+
+As part of on-prem:
+ * There will be a master nodes(linux) and Nodes cluster(win/linux), if they have one master node and we know all the data is stored in etcd if the master node is down entire cluster of nodes will be down. since organisations try to maintain one or more master nodes which is called High Availabile setup.
+
+ As part of Cloud :
+ *  There is no need of managing Master node by us, Azure will manage it and give 99.9% availability.
+ * Kubernetes master nodes that is control plane charged per hour and nodes will be charged same as Azure Vms cost no extra charges.
+ * They will give you networks,load balencing , storage, volume.
+ * network addons provided:
+    * load balencers
+    * firewalls
+    * dns
+    * various cni plugins
+  * storage
+    * volumes on cloud
+    * secrets in vaults
+  * some cloud providers have a new model of pricing. Price per pod not nodes(you won't be charged for creating clusters until you run a pod in it) as of now this is supported in aws and google clouds.
+
+## Controllers
+
+* Controllers control pods
+* we have following controllers:
+  * Replicaset
+  * Deployment
+  * Job
+  * CronJob
+  * Stateful set
+* Generally when we deal with controllers we will also need to understand 
+  * Service
+
+Replicaset:
+
+* this controller is responsible for replicas od pods
+* desired state
+    * which pod
+    * how many
+* Replicaset will find the number of pods by matching labels
+* Generally in all controller objects of k8s we have a field called as template
+* In Replicaset we create pods, so the template will have pod specification.
+
+## Impact of labels on pods
+
+![alt text](image-4.png)
+
+* if you want to scale pods there are two ways
+    1. change replicas in .yaml file
+    2. any admin can execute this command so that replicas will change[ kubectl scale --replicas 4 rs/httpd-rs] you increase and decrese number.
+
+* when you follow first apporoach the changes are reflected in git hub so that if you want to old version you can switch eaily and you will know chnages
+* when you follow second apporoch we won't be able to know who made changes, it is not recommended approach.
+
+* We also have Replication controller  which does the same thing as replicaset, but there is one major reason  and two differences
+
+  * Major reason  for replicaset was created is to support deployments
+  * two differences
+      * replication controller uses only equality based selection of pods
+      * replicaset internally supports persistance
+
+
+## Exposing Application in kubernetes 
+
+* Asssume that we have created two replica sets one for identity service and another for Cart Service each replica set are designed to create two pods.
+
+* here when a pod is created it gets ip address. and now we have two pods for identity service and two for cart service
+
+* Say like when anyone/by somithing happening a pod gets deleted then Replicaset will create new, whenever a pod gets recreated the ip address of pod will change
+
+**now, cart service pods needs to speak to identity service which ip it should use ?**
+A. To solve above problem we create a service on matching labels with pods
+ ex: the pods which have label "app=spc" belong to one service. for two  identity pods we create one service similarly for cart service pods.
+
+* Services will have a fixed ip address until unless you delete it won't change.
+
+* in kubenetes whenever any application wants to speak with any other application they won't speak directly, they will speak through Services.
+
+* There will be a Service in front of any pod or replicaset creation.
+
+* Service can be exposed with in kubernetes cluster only , you can do external via 
+1. port forwarding
+2. in a cloud based environments you can link the Service with load balencers
+3. you can link to dns server
+
+**Service**
+
+* Each service will gets a name and ip address(virtual ip address)
+* k8s service gets an ip which is collection of endpoints
+* Internal ip address of the service is called **cluster ip** and genereally external ips or names can also be given in the case of managed k8s cluster(cloud).
+
+![alt text](image-6.png)
+
+* when you observe the image, you can see cluster IPs
+* service/fe-svc [front-end service] got port number
+* service/be-svc [back-end service] doesn't got any port number
+
+* we have mentioned in our fe-svc.yaml file that `type: NodePort` since it got assigned with a port number. for backend service we have mentioned `ClusterIP` since there is no port assined.
+* In Yaml files for Service we have an option ports, here under ports we have two options 
+  * targetPort
+  * port 
+* `targetPort` represents `Pod to run on which port based on application ` ex: 80,5000,8080 ..etc
+* `port` represents  `Service to run on which Port`
+* most of the cases we will choose port numbers same for both.
+
+**Testing by deleting Pod**
+![alt text](image-7.png)
+
+* here when we delete fe pod and tried showing all the pods again there is no change in ip addresss of services
+
+![alt text](image-8.png) 
+* from above image we can see the individual ips of Pods.
+
+![alt text](image-9.png)
+
+**Networking of Pods**
+* Pods are connected to each other via a virtual network called **CNI** (Container Network Interface)
+**from Node**
+  * when you do `curl http://be-svc` it can't resolve. but through ip it will work
+**from pod**
+  * when you do `curl http://be-svc` it will work and through ip also it will work.
+  * you can call a service from any pod by its name.
+* when you are giving name to access any site directly it is called `DNS`, inside every kubernetes cluster there will be a dns server[cat /etc/resolv.conf]
+
+### health Probes
+* health probes are used to check the health of container
+* Ensuring the service forwards the requests to right pods or working pods is done by health probes.
+* Health probes in k8s:
+  * we have 3 types of health probes
+    * liveness probe
+      * it checks for health of application in pod.
+      * if this fails the container will be restarted.
+    * readyness probe
+      * it checks health of application
+      * if this check fails the service not forward requests to this pod.
+    * startup probe
+      * it checks if the applications is started or not
+      * this is used to restart time taking startups
+      * if this fails the container will be restarted.
+
+Probes can be done in multiple ways
+  * command based probe
+      * we will be executing a command and based on exit code the application health is determined.
+  * http based probe
+    * here we send http request
+      * 1xx : infotmation
+      * 2xx : success
+      * 3xx : redirect
+      * 4xx : client error
+      * 5xx : server error
+  * tcp based probe
+    * here we send tcp request
+  * gRPC probe
+    * here we send gRPC request
