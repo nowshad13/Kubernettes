@@ -772,3 +772,72 @@ Both are **important in automation** and help in **managing background tasks** e
 
 ---
 
+## Pod Lifecycle
+
+The **Pod lifecycle** in Kubernetes refers to the different stages a Pod goes through from creation to termination. Understanding this lifecycle is crucial for managing applications running in Kubernetes. Here's a simple explanation of the key stages:
+
+---
+
+### 1. **Pending**
+   - When a Pod is created, it first enters the **Pending** state.
+   - In this stage, Kubernetes is setting up the Pod. This includes:
+     - Pulling the container image(s) from a registry.
+     - Allocating resources (CPU, memory, etc.).
+     - Scheduling the Pod to a node in the cluster.
+   - If something goes wrong (e.g., the image cannot be pulled), the Pod stays in this state.
+
+---
+
+### 2. **Running**
+   - Once the Pod is scheduled and the containers are created, it moves to the **Running** state.
+   - In this stage:
+     - The containers inside the Pod are running.
+     - The application or process inside the containers is executing.
+   - The Pod remains in this state as long as the containers are running without issues.
+
+---
+
+### 3. **Succeeded**
+   - If the Pod is running a task that is expected to complete (e.g., a batch job), it will enter the **Succeeded** state once the task is done.
+   - In this state:
+     - All containers in the Pod have completed their tasks successfully.
+     - The Pod is no longer running but is retained for logging or debugging purposes.
+
+---
+
+### 4. **Failed**
+   - If one or more containers in the Pod fail (e.g., crash or exit with an error), the Pod enters the **Failed** state.
+   - In this state:
+     - The Pod stops running.
+     - Kubernetes may try to restart the containers depending on the `restartPolicy` (e.g., `OnFailure` or `Never`).
+     - If the Pod continues to fail, it may be terminated.
+
+---
+
+### 5. **Terminating**
+   - When a Pod is deleted or evicted (e.g., due to resource constraints), it enters the **Terminating** state.
+   - In this stage:
+     - Kubernetes sends a termination signal to the containers in the Pod.
+     - The containers have a grace period to shut down gracefully (default is 30 seconds).
+     - After the grace period, the Pod is forcibly terminated and removed from the cluster.
+
+---
+
+### Additional Notes:
+- **Restart Policy**: The behavior of a Pod when a container fails is controlled by the `restartPolicy`:
+  - `Always`: Restart the container automatically (used for Deployments).
+  - `OnFailure`: Restart the container only if it fails (used for Jobs).
+  - `Never`: Do not restart the container (used for Jobs).
+
+- **Probes**: Kubernetes uses **liveness**, **readiness**, and **startup probes** to monitor the health of containers and decide whether to restart or terminate them.
+
+---
+
+### Summary of Pod Lifecycle:
+1. **Pending** → Setting up the Pod.
+2. **Running** → Containers are executing.
+3. **Succeeded** → Task completed successfully.
+4. **Failed** → Task or container failed.
+5. **Terminating** → Pod is being deleted.
+
+This lifecycle ensures that Kubernetes can manage Pods effectively, restarting them when necessary and cleaning up resources when they are no longer needed.
