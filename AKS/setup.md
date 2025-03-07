@@ -15,3 +15,6 @@ az aks create --resource-group $MY_RESOURCE_GROUP_NAME \
     --node-vm-size 'Standard_B2s'
 
 ```
+```bash
+az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
+```
