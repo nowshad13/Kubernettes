@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: app-rs
+  labels:
+    env: dev
+    topic: replicaset
+spec:
+  minReadySeconds: 40
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: dbtestapp
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: dbtestapp
+        env: dev
+        topic: pod
+    spec:
+      containers:
+        - name: dbapp
+          image: aravindh146/dbconnectiontestapp:latest
+          ports:
+            - containerPort: 8080
+              protocol: "TCP"
+
+

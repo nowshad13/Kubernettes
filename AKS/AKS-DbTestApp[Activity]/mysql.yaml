@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-dep
+spec:
+  minReadySeconds: 40
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: mysql
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: mysql
+        env: dev
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+              protocol: "TCP"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "admin123"
+            - name: MYSQL_DATABASE
+              value: "mydb"
+            - name: MYSQL_USER
+              value: "Ara"
+            - name: MYSQL_PASSWORD
+              value: "admin123"
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+spec:
+  type: ClusterIP  # ✅ Changed from LoadBalancer to ClusterIP (internal access only)
+  ports:
+    - targetPort: 3306
+      port: 3306
+      protocol: "TCP"
+  selector:
+    app: mysql
