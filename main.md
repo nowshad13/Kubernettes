@@ -841,3 +841,31 @@ The **Pod lifecycle** in Kubernetes refers to the different stages a Pod goes th
 5. **Terminating** → Pod is being deleted.
 
 This lifecycle ensures that Kubernetes can manage Pods effectively, restarting them when necessary and cleaning up resources when they are no longer needed.
+
+## Persistant Volumes:
+
+* There are two types of provisionings
+  * Static provisioning
+  * Dynamic provisioning
+
+* Static Provisioning:
+  * A storage space has to be manually created and to be updated in k8s cluster
+
+* Dynamic Provisioning(Managed k8s cluster)
+  * kubernetes creates necessary storage dynamically
+
+* Components:
+  * persistant volume
+  * persistant volume claim
+  * storage class
+
+* Kubernetes storage classes have built-in intelligence to dynamically provision storage in the cloud.
+
+* Storage classes is used to created persistant storages by specifying storage types and specifications.
+
+
+* Whenever you need to create a persistant volume, a pod should request for a volume that is `pvc`this goes to storage class then storage class will create a persistant volume that is given to pod.
+
+* Access modes:
+  * ReadWriteOnce:
+    * when you try to create a pv it gets mounted to a node, the pods are created on this node will get Read and Write Access for other nodes the pods will get read access to the pv.

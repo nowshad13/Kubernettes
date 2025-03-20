@@ -1,0 +1,15 @@
+--- 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nop-db
+spec:
+  containers:
+    - name: nop
+      image: mysql:latest
+      args:
+        - sleep
+        - 1d
+      envFrom:
+        - configMapRef:
+            name: nop-cm
