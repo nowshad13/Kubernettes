@@ -18,3 +18,20 @@ az aks create --resource-group $MY_RESOURCE_GROUP_NAME \
 ```bash
 az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
 ```
+
+
+Resource deletion:
+
+```powershell
+# Get all resource groups except "SSH_Key"
+$resourceGroups = az group list --query "[?name!='SSH_Key'].name" -o tsv
+
+# Loop through each resource group and delete it
+foreach ($rg in $resourceGroups) {
+    Write-Output "Deleting resource group: $rg"
+    az group delete --name $rg --yes --no-wait
+}
+
+Write-Output "Deletion process started for all resource groups except 'SSH_Key'."
+
+```

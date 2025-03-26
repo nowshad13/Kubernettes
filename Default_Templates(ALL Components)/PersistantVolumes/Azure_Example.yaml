@@ -1,0 +1,18 @@
+# PersistentVolume (PV) definition in Kubernetes for Azure Disk
+apiVersion: v1  # Specifies the API version for PersistentVolumes
+kind: PersistentVolume  # Defines the resource type as a PersistentVolume
+metadata:
+  name: azure-pv  # Name of the PersistentVolume
+  labels:
+    type: azure-disk  # Label to identify the storage type as Azure Disk
+spec:
+  capacity:
+    storage: 10Gi  # Total storage capacity of the PV
+  accessModes:
+    - ReadWriteOnce  # Defines how the volume can be accessed (RWO, ROX, RWX)
+  persistentVolumeReclaimPolicy: Retain  # Reclaim policy (Retain, Delete, Recycle)
+  storageClassName: azure-disk  # Storage class associated with the PV
+  azureDisk:
+    kind: Managed  # Managed or Unmanaged Disk
+    diskName: azure-managed-disk  # Name of the Azure Disk
+    diskURI: /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Compute/disks/azure-managed-disk  # Azure Disk URI

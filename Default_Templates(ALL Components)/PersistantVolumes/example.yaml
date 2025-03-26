@@ -1,0 +1,16 @@
+# PersistentVolume (PV) definition in Kubernetes
+apiVersion: v1  # Specifies the API version for PersistentVolumes
+kind: PersistentVolume  # Defines the resource type as a PersistentVolume
+metadata:
+  name: my-pv  # Name of the PersistentVolume
+  labels:
+    type: local  # Label to identify the storage type
+spec:
+  capacity:
+    storage: 10Gi  # Total storage capacity of the PV
+  accessModes:
+    - ReadWriteOnce  # Defines how the volume can be accessed (RWO, ROX, RWX)
+  persistentVolumeReclaimPolicy: Retain  # Reclaim policy (Retain, Delete, Recycle)
+  storageClassName: standard  # Storage class associated with the PV
+  hostPath:
+    path: /mnt/data  # Path on the host machine where data will be stored

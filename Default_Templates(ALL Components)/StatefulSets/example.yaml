@@ -1,0 +1,38 @@
+# StatefulSet definition in Kubernetes
+apiVersion: apps/v1  # Specifies the API version for StatefulSets
+kind: StatefulSet  # Defines the resource type as a StatefulSet
+metadata:
+  name: my-statefulset  # Name of the StatefulSet
+  labels:
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+spec:
+  serviceName: "my-service"  # Headless service name associated with this StatefulSet
+  replicas: 3  # Number of desired Pod replicas
+  selector:
+    matchLabels:
+      app: my-app  # Must match labels in template
+  template:
+    metadata:
+      labels:
+        app: my-app  # Labels assigned to Pods
+        environment: production
+    spec:
+      restartPolicy: Always  # Restart policy (Always, OnFailure, Never)
+      containers:
+        - name: my-container  # Name of the container inside the Pod
+          image: nginx:latest  # Container image to use (change as needed)
+          ports:
+            - containerPort: 80  # Port inside the container to expose
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data  # Mount path for the persistent volume
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume  # Name of the persistent volume claim
+      spec:
+        accessModes:
+          - ReadWriteOnce  # Access mode for the volume
+        resources:
+          requests:
+            storage: 5Gi  # Storage size requested for each replica

@@ -1,0 +1,19 @@
+# Example Kubernetes resource with Annotations
+apiVersion: v1  # Specifies the API version
+kind: Pod  # Defines the resource type as a Pod
+metadata:
+  name: my-pod  # Name of the Pod
+  labels:
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+  annotations:
+    description: "This is a sample Pod with annotations."  # General description of the Pod
+    owner: "Aravindh Kumar Naryana"  # Owner of this resource
+    last-updated: "2025-03-26"  # Date when this resource was last updated
+    note: "Annotations are used for storing metadata that is not used by selectors."
+spec:
+  containers:
+    - name: my-container  # Name of the container inside the Pod
+      image: nginx:latest  # Container image to use (change as needed)
+      ports:
+        - containerPort: 80  # Port inside the container to expose

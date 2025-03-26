@@ -1,0 +1,17 @@
+# Headless Service in Kubernetes (No ClusterIP assigned)
+apiVersion: v1  # Specifies the API version for Services
+kind: Service  # Defines the resource type as a Service
+metadata:
+  name: my-headless-service  # This is the name of the Service
+  labels:  # Labels help to categorize and identify resources
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+spec:
+  selector:  # Selects the Pods to route traffic to
+    app: my-app  # Must match the labels of the target Pods
+  clusterIP: None  # Setting this to 'None' makes it a Headless Service
+  ports:
+    - protocol: TCP  # Protocol for the port (TCP or UDP)
+      port: 80  # Port exposed by the Service
+      targetPort: 80  # Port on the container to which traffic is forwarded
+      name: http  # Name of the port for reference

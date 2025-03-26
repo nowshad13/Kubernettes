@@ -1,0 +1,23 @@
+# Ingress definition in Kubernetes
+apiVersion: networking.k8s.io/v1  # Specifies the API version for Ingress
+kind: Ingress  # Defines the resource type as an Ingress
+metadata:
+  name: my-ingress  # Name of the Ingress resource
+  labels:
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: "/"  # Rewrite target path
+    kubernetes.io/ingress.class: "nginx"  # Specifies the Ingress class to use
+spec:
+  rules:
+    - host: myapp.example.com  # The domain name that routes to the service
+      http:
+        paths:
+          - path: /  # URL path to match
+            pathType: Prefix  # Path type (Exact, Prefix, ImplementationSpecific)
+            backend:
+              service:
+                name: my-service  # Name of the backend service
+                port:
+                  number: 80  # Port number of the backend service

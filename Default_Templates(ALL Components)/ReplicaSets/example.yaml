@@ -1,0 +1,40 @@
+apiVersion: apps/v1  # Specifies the API version for ReplicaSet
+kind: ReplicaSet  # Defines the resource type as a ReplicaSet
+metadata:
+  name: my-replicaset  # This is the name of the ReplicaSet
+  labels:  # Labels help to categorize and select resources
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+spec:
+  replicas: 3  # Number of desired Pod replicas
+  selector:  # Defines how ReplicaSet identifies managed Pods
+    matchLabels:
+      app: my-app  # This must match the labels of the template
+  template:  # Template for creating new Pods
+    metadata:
+      labels:  # Labels must match selector labels
+        app: my-app
+        environment: production
+    spec:
+      restartPolicy: Always  # Restart policy (Always, OnFailure, Never)
+      containers:
+        - name: my-container  # The name of the container inside the Pod
+          image: nginx:latest  # The container image to use (change as needed)
+          ports:
+            - containerPort: 80  # Port inside the container to expose
+          resources:  # Resource limits and requests for CPU and memory
+            requests:
+              cpu: "250m"  # Minimum CPU request (250 millicores)
+              memory: "256Mi"  # Minimum Memory request (256 Megabytes)
+            limits:
+              cpu: "500m"  # Maximum CPU limit
+              memory: "512Mi"  # Maximum Memory limit
+          env:  # Environment variables for the container
+            - name: ENVIRONMENT
+              value: "production"
+          volumeMounts:  # Mounting volumes inside the container
+            - name: config-volume
+              mountPath: /etc/config  # Directory inside the container
+      volumes:  # Volumes used by the Pod
+        - name: config-volume
+          emptyDir: {}  # Example empty directory volume (replace with persistent volume if needed)

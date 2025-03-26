@@ -1,0 +1,12 @@
+# ConfigMap definition in Kubernetes
+apiVersion: v1  # Specifies the API version for ConfigMaps
+kind: ConfigMap  # Defines the resource type as a ConfigMap
+metadata:
+  name: my-configmap  # Name of the ConfigMap
+  labels:
+    app: my-app  # Label for application identification
+    environment: production  # Environment label (e.g., dev, staging, production)
+data:
+  APP_ENV: "production"  # Environment variable value
+  LOG_LEVEL: "info"  # Logging level setting
+  DATABASE_URL: "postgres://user:password@db:5432/mydatabase"  # Example database connection string
