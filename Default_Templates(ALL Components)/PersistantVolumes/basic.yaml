@@ -1,0 +1,50 @@
+--- # Persistent volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-path
+  hostPath:
+    path: "/mnt/data"
+  
+--- # Persistentvolumeclaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local-path
+  
+--- # persistentvolume consumtion through claim (pvc)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  containers:
+    - name: my-container
+      image: nginx
+      volumeMounts:
+        - name: storage
+          mountPath: "/data"
+  volumes:
+    - name: storage
+      persistentVolumeClaim:
+        claimName: my-pvc
+        
+        
+        
+        
+        
+

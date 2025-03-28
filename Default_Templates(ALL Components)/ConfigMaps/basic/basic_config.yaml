@@ -1,0 +1,14 @@
+# Def: "ConfigMap in Kubernetes is used to store configuration data like environment variables, 
+# file paths, or settings separately from the application. This helps in managing configurations 
+# easily without changing the application code."
+
+--- # ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-cm
+data:
+  MYSQL_ROOT_PASSWORD: admin123
+  MYSQL_DATABASE: Ara
+  MYSQL_USER: Ara
+  MYSQL_PASSWORD: admin123
