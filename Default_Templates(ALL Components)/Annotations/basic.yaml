@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: annotated-pod
+  labels:
+    app: myapp
+  annotations:
+    description: "This is a sample pod with annotations."
+    owner: "Aravindh Kumar Naryana"
+    environment: "Development"
+spec:
+  containers:
+    - name: my-container
+      image: nginx:latest
+      ports:
+        - containerPort: 80
