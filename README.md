@@ -419,7 +419,3 @@ kube-proxy (networking)
 
 ---
 
-If you want, I can **simulate this live** for you using Minikube or kind — so you can **watch the flow in real-time** with `kubectl get` and `describe` commands.
-
-👉 Do you want me to show that step-by-step with a live example (Deployment → ReplicaSet → Pods)?
-
