@@ -3,12 +3,10 @@
 <img width="4856" height="2656" alt="_C__Users_nowsh_Downloads_Kubernetes%20Archetecture_ svg (1)" src="https://github.com/user-attachments/assets/1edf29c2-0792-4318-9c84-f05bffb88f34" />
 
 
-
-```
 ### How the Architecture Works
 
 When a user writes a YAML file to create Kubernetes resources like Pods, Deployments, ReplicaSets, etc., and runs `kubectl apply -f <filename>.yaml`, the `kubectl` command communicates with the **Kube API Server**, which is the first entry point to the control plane. The API Server reads the YAML, understands the user’s desired state, and stores it in **etcd**, a key-value store that maintains the complete cluster state. The **Controller Manager** continuously communicates with the API Server to monitor changes in the desired state. When it detects a new Deployment, the Deployment Controller inside it creates a ReplicaSet object, and the ReplicaSet Controller ensures the required number of Pods are created. At this point, the Pods are in a **Pending** state because they have not yet been assigned to a node. The **Scheduler** then observes these unscheduled Pods through the API Server, evaluates available nodes based on CPU, memory, and other constraints, and assigns each Pod to a suitable node, updating the Pod specification in the API Server. Once the Pod is assigned, the **kubelet** on that node pulls the required container image using the container runtime, creates the container, and updates the Pod’s status to **Running**. Meanwhile, **kube-proxy** configures network routing so that Services and other Pods can communicate with the newly running Pod, completing the process from YAML definition to a fully operational Pod in the cluster.
-```
+
 
 ---
 
